@@ -28,7 +28,9 @@ docker build -t boomi-atom:latest .
 # Build molecule container
 docker build --build-arg="DEPLOY_TYPE=molecule" -t boomi-molecule:latest .
 ```
-3. Deploy the Boomi Atom/Molecule using this module
+3. Deploy the Boomi Atom/Molecule using this module.
+    - This module defaults to deploying an Atom so if deploying a molecule set the `molecule_deployment` variable to `true`.
+    - You need to first bootstrap the deployment by setting the `bootstrap_deploy` variable to `true`. After the initial deployment is sucessful, set `bootstrap_deploy` to `false` and re-run terraform to scale out and finish creating the logforwarding service.
 
 
 ### For Boomi Atom Deployment
@@ -61,7 +63,7 @@ module "boomi_molecule_service" {
   private_subnet_ids         = module.vpc.private_subnets
   allowed_cidr_blocks        = [trusted_cidr_block1, trusted_cidr_block2]
   ecs_cluster_name           = "your-ecs-cluster-name"
-  desired_count              = 1
+  desired_count              = length(module.vpc.private_subnets)
   task_definition_cpu        = 4096
   task_definition_memory     = 15657
   allowed_security_group_ids = [aws_security_group.trusted-sources.id]
@@ -72,6 +74,8 @@ module "boomi_molecule_service" {
   boomi_account_id           = "your-boomi-account-id"
   boomi_environment_id       = "your-boomi-environment-id"
   boomi_install_token        = "your-boomi-install-token"
+  molecule_deployment        = true
+  bootstrap_deploy           = true # This can be set to false after the initial deployment
 }
 ```
 
@@ -147,6 +151,7 @@ No modules.
 | <a name="input_boomi_environment_class"></a> [boomi\_environment\_class](#input\_boomi\_environment\_class) | The Boomi environment class to associate with the Atom/Molecule | `string` | `"Test"` | no |
 | <a name="input_boomi_environment_id"></a> [boomi\_environment\_id](#input\_boomi\_environment\_id) | The Boomi environment ID to assocaite with the Atom/Molecule | `string` | n/a | yes |
 | <a name="input_boomi_install_token"></a> [boomi\_install\_token](#input\_boomi\_install\_token) | The Boomi Install Token. This is used to install the Atom/Molecule and is only valid for up to 24hrs. | `string` | n/a | yes |
+| <a name="input_bootstrap_deploy"></a> [bootstrap\_deploy](#input\_bootstrap\_deploy) | A boolean value to determine if this is the initial deployment of atom/molecule. Set to true at first deployment and false for subsequent runs. | `bool` | `false` | no |
 | <a name="input_container_efs_mount_point"></a> [container\_efs\_mount\_point](#input\_container\_efs\_mount\_point) | The EFS mount point for the container | `string` | `"/mnt/boomi"` | no |
 | <a name="input_container_name"></a> [container\_name](#input\_container\_name) | The Container Name | `string` | `"atom_node"` | no |
 | <a name="input_deployment_maximum_percent"></a> [deployment\_maximum\_percent](#input\_deployment\_maximum\_percent) | The maximum healthy percent for the ecs deployment. Only valid for molecule deployments. Atom deployments will always have a maximum percent of 100. | `number` | `200` | no |

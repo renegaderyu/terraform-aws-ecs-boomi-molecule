@@ -258,10 +258,11 @@ resource "aws_ecs_service" "this" {
   task_definition = aws_ecs_task_definition.this.arn
   launch_type     = "EC2"
 
-  # Ignore the variable overrides for atom deployments, which should only have 1 task running at a time
-  desired_count                      = var.molecule_deployment ? var.desired_count : 1
-  deployment_minimum_healthy_percent = var.molecule_deployment ? var.deployment_minimum_healthy_percent : 0
-  deployment_maximum_percent         = var.molecule_deployment ? var.deployment_maximum_percent : 100
+  # Ignore the variable overrides for atom deployments and bootstrapping a molecule deploy
+  # In these cases there should only be 1 task running to properly install
+  desired_count                      = var.molecule_deployment && !var.bootstrap_deploy ? var.desired_count : 1
+  deployment_minimum_healthy_percent = var.molecule_deployment && !var.bootstrap_deploy ? var.deployment_minimum_healthy_percent : 0
+  deployment_maximum_percent         = var.molecule_deployment && !var.bootstrap_deploy ? var.deployment_maximum_percent : 100
 
   network_configuration {
     security_groups = [
@@ -398,14 +399,19 @@ resource "aws_ecs_service" "log-forwarder" {
   task_definition = aws_ecs_task_definition.log-forwarder.arn
   launch_type     = "EC2"
 
-  # Ignore the variable overrides for atom deployments, which should only have 1 task running at a time
-  desired_count                      = 1
+  # If this is a bootstrap deployment, we don't want to run the log forwarder until the molecule is fully deployed
+  # This is because the log forwarder will mount the EFS volume, mess up the permissions, and cause the molecule install to fail
+  desired_count                      = var.bootstrap_deploy ? 0 : 1
   deployment_minimum_healthy_percent = 0
   deployment_maximum_percent         = 100
 
   network_configuration {
     subnets = var.private_subnet_ids
   }
+
+  depends_on = [
+    aws_ecs_service.this
+  ]
 }
 
 resource "aws_ecs_task_definition" "log-forwarder" {

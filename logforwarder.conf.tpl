@@ -8,6 +8,7 @@
     Name              tail
     Tag               ${prefix}-process-logs
     Path              /var/log/**/execution/history/**/**/process.xml
+    Path_Key          efs_filename
     DB                /var/log/flb_positions.db
     DB.locking        true
     Skip_Long_Lines   On
@@ -22,6 +23,7 @@
     Name              tail
     Tag               ${prefix}-runtime-logs
     Path              /var/log/**/logs/*.log
+    Path_Key          efs_filename
     DB                /var/log/flb_positions.db
     DB.locking        true
     Skip_Long_Lines   On
@@ -30,6 +32,26 @@
     Read_from_Head    true
     Skip_Empty_Lines  On
     Ignore_Older      14d
+
+[FILTER]
+    Name modify
+    Match ${prefix}-process-logs
+    Add boomi_log_type process
+
+[FILTER]
+    Name modify
+    Match ${prefix}-runtime-logs
+    Add boomi_log_type runtime
+
+[FILTER]
+    # These values are added by the ECS agent but will all be from the logforwarding service
+    Name ecs
+    Match *
+    ADD ecs_task_arn $TaskARN
+    ADD ecs_cluster_name $ClusterName
+    ADD ecs_service $TaskDefinitionFamily
+    ADD task_def_version $TaskDefinitionVersion
+    ADD task_id $TaskID
 
 [OUTPUT]
     Name             s3

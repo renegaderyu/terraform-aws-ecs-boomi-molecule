@@ -15,6 +15,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "bootstrap_deploy" {
+  type        = bool
+  default     = false
+  description = "A boolean value to determine if this is the initial deployment of atom/molecule. Set to true at first deployment and false for subsequent runs."
+}
+
 variable "vpc_id" {
   type        = string
   description = "VPC ID, example vpc-1122334455"
