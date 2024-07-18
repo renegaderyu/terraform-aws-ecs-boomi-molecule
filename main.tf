@@ -185,7 +185,7 @@ resource "aws_security_group_rule" "allow_sgs_to_efs" {
 }
 
 resource "aws_efs_file_system" "this" {
-  creation_token = "molecule-fs"
+  creation_token = "${var.prefix}-molecule-fs"
 
   encrypted        = false
   throughput_mode  = "bursting"
@@ -194,7 +194,7 @@ resource "aws_efs_file_system" "this" {
   tags = merge(
     local.common_tags,
     {
-      "Name" = "MoleculeFileSystem"
+      "Name" = "${var.prefix}-molecule-fs"
     }
   )
 }

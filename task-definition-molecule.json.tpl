@@ -37,11 +37,11 @@
         "value": "-Xmx${ecs_task_memory_reservation}m|-Dfile.encoding=UTF-8"
       },
       {
-        "name": "BOOMI_ACCOUNT_ID",
+        "name": "BOOMI_ACCOUNTID",
         "value": "${boomi_account_id}"
       },
       {
-        "name": "BOOMI_ATOM_NAME",
+        "name": "BOOMI_ATOMNAME",
         "value": "${atom_name}"
       },
       {
