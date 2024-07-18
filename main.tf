@@ -21,7 +21,7 @@ locals {
     { project_name = var.project_name },
     var.tags
   )
-  volume_name = "molecule-storage"
+  volume_name = "${var.prefix}-molecule-storage"
 }
 
 resource "aws_s3_object" "firelens-config" {
