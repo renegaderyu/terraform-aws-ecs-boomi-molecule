@@ -16,12 +16,18 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
+data "aws_route53_zone" "primary" {
+  zone_id = var.r53_zone_id
+}
+
 locals {
   common_tags = merge(
     { project_name = var.project_name },
     var.tags
   )
-  volume_name = "${var.prefix}-molecule-storage"
+  volume_name                    = "${var.prefix}-molecule-storage"
+  validation_records             = length(var.cert_sans) + 1
+  domain_validation_options_list = tolist(aws_acm_certificate.cert.domain_validation_options)
 }
 
 resource "aws_s3_object" "firelens-config" {
@@ -92,6 +98,16 @@ resource "aws_security_group_rule" "allow_unicast_between_nodes" {
   to_port           = 7800
 }
 
+resource "aws_security_group_rule" "allow_api_between_nodes" {
+  self              = true
+  description       = "Allow HTTP between nodes"
+  security_group_id = aws_security_group.svc.id
+  type              = "ingress"
+  protocol          = "TCP"
+  from_port         = var.atom_port
+  to_port           = var.atom_port
+}
+
 resource "aws_security_group_rule" "allow_alb" {
   description              = "Allow Traffic from ALB"
   security_group_id        = aws_security_group.svc.id
@@ -102,46 +118,6 @@ resource "aws_security_group_rule" "allow_alb" {
   to_port                  = var.atom_port
 }
 
-
-resource "aws_security_group" "alb" {
-  name        = "${var.prefix}-alb-sg"
-  description = "${var.prefix} Load balancer security group"
-  vpc_id      = var.vpc_id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = merge(
-    local.common_tags,
-    {
-      "Name" = "${var.prefix}-alb-sg"
-    },
-  )
-}
-
-resource "aws_security_group_rule" "allow_security_groups" {
-  count                    = length(var.allowed_security_group_ids)
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "TCP"
-  type                     = "ingress"
-  security_group_id        = aws_security_group.alb.id
-  source_security_group_id = var.allowed_security_group_ids[count.index]
-}
-
-resource "aws_security_group_rule" "allow_cidr_blocks" {
-  count             = length(var.allowed_cidr_blocks) == 0 ? 0 : 1
-  from_port         = 443
-  to_port           = 443
-  protocol          = "TCP"
-  type              = "ingress"
-  security_group_id = aws_security_group.alb.id
-  cidr_blocks       = var.allowed_cidr_blocks
-}
 
 resource "aws_security_group" "efs" {
   name        = "${var.prefix}-efs-sg"
@@ -252,6 +228,153 @@ data "aws_iam_policy_document" "efs" {
   }
 }
 
+# Load Balancer and related
+resource "aws_security_group" "alb" {
+  name        = "${var.prefix}-alb-sg"
+  description = "${var.prefix} Load balancer security group"
+  vpc_id      = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = merge(
+    local.common_tags,
+    {
+      "Name" = "${var.prefix}-alb-sg"
+    },
+  )
+}
+
+resource "aws_security_group_rule" "allow_security_groups" {
+  count                    = length(var.allowed_security_group_ids)
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "TCP"
+  type                     = "ingress"
+  security_group_id        = aws_security_group.alb.id
+  source_security_group_id = var.allowed_security_group_ids[count.index]
+}
+
+resource "aws_security_group_rule" "allow_cidr_blocks" {
+  count             = length(var.allowed_cidr_blocks) == 0 ? 0 : 1
+  from_port         = 443
+  to_port           = 443
+  protocol          = "TCP"
+  type              = "ingress"
+  security_group_id = aws_security_group.alb.id
+  cidr_blocks       = var.allowed_cidr_blocks
+}
+
+resource "aws_alb_target_group" "this" {
+  name        = "${var.prefix}-tg"
+  port        = var.atom_port
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path                = "/_admin/liveness"
+    port                = var.atom_port
+    interval            = 15
+    timeout             = 10
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
+    matcher             = "200"
+  }
+
+  tags = merge(
+    local.common_tags,
+    {
+      "Name" = "${var.prefix}-tg"
+    },
+  )
+}
+
+resource "aws_alb" "this" {
+  name               = "${var.prefix}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = var.public_subnet_ids
+
+  tags = merge(
+    local.common_tags,
+    {
+      "Name" = "${var.prefix}-alb"
+    },
+  )
+
+  enable_deletion_protection = false
+}
+
+resource "aws_alb_listener" "front_end_https" {
+  load_balancer_arn = aws_alb.this.id
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate.cert.arn
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+
+  default_action {
+    target_group_arn = aws_alb_target_group.this.id
+    type             = "forward"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_acm_certificate" "cert" {
+  domain_name               = var.cert_domain
+  validation_method         = "DNS"
+  subject_alternative_names = var.cert_sans
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = merge(
+    { "bn-expense-class" = "security" },
+    var.tags
+  )
+}
+
+resource "aws_route53_record" "cert_validation" {
+  count   = local.validation_records
+  name    = local.domain_validation_options_list[count.index].resource_record_name
+  type    = local.domain_validation_options_list[count.index].resource_record_type
+  zone_id = var.r53_zone_id
+  records = [local.domain_validation_options_list[count.index].resource_record_value]
+  ttl     = 300
+}
+
+resource "aws_acm_certificate_validation" "cert" {
+  count                   = local.validation_records
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = aws_route53_record.cert_validation[*].fqdn
+}
+
+resource "aws_route53_record" "service" {
+  name    = "${var.prefix}.${data.aws_route53_zone.primary.name}"
+  zone_id = data.aws_route53_zone.primary.id
+  type    = "A"
+
+  alias {
+    name                   = aws_alb.this.dns_name
+    zone_id                = aws_alb.this.zone_id
+    evaluate_target_health = false
+  }
+}
+
+# ECS service
 resource "aws_ecs_service" "this" {
   name            = var.prefix
   cluster         = var.ecs_cluster_name
@@ -263,12 +386,18 @@ resource "aws_ecs_service" "this" {
   desired_count                      = var.molecule_deployment && !var.bootstrap_deploy ? var.desired_count : 1
   deployment_minimum_healthy_percent = var.molecule_deployment && !var.bootstrap_deploy ? var.deployment_minimum_healthy_percent : 0
   deployment_maximum_percent         = var.molecule_deployment && !var.bootstrap_deploy ? var.deployment_maximum_percent : 100
-
+  health_check_grace_period_seconds  = var.healthcheck_start_period
   network_configuration {
     security_groups = [
-      aws_security_group.svc.id,
+      aws_security_group.svc.id
     ]
     subnets = var.private_subnet_ids
+  }
+
+  load_balancer {
+    target_group_arn = aws_alb_target_group.this.arn
+    container_name   = var.container_name
+    container_port   = var.atom_port
   }
 
 }
@@ -391,7 +520,6 @@ resource "aws_iam_role_policy_attachment" "attach_custom_policy" {
   role       = aws_iam_role.role.id
   policy_arn = aws_iam_policy.policy.arn
 }
-
 
 resource "aws_ecs_service" "log-forwarder" {
   name            = "${var.prefix}-log-forwarder"
