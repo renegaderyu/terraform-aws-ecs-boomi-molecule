@@ -31,6 +31,11 @@ variable "private_subnet_ids" {
   description = "A list of strings contains the IDs of the private subnets in the vpc"
 }
 
+variable "public_subnet_ids" {
+  type        = list(string)
+  description = "A list of strings contains the IDs of the public subnets in the vpc"
+}
+
 variable "allowed_cidr_blocks" {
   type        = list(string)
   description = "A list of strings contains the CIDR blocks e.g. 10.10.10.0/26 which allowed to access the ALB"
@@ -219,4 +224,19 @@ variable "logforwarder_ecs_task_memory" {
 variable "logging_bucket_name" {
   type        = string
   description = "The name of the S3 bucket to store the logs"
+}
+
+variable "r53_zone_id" {
+  type        = string
+  description = "The Route53 Zone ID to request the certificate and use for DNS validation"
+}
+
+variable "cert_domain" {
+  type        = string
+  description = "A list of strings contains the Subject Alternative Names (SANs) for the certificate"
+}
+
+variable "cert_sans" {
+  type        = list(string)
+  description = "A list of strings contains the Subject Alternative Names (SANs) for the certificate"
 }

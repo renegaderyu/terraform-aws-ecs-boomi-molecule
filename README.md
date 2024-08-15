@@ -103,6 +103,11 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_acm_certificate.cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate) | resource |
+| [aws_acm_certificate_validation.cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate_validation) | resource |
+| [aws_alb.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/alb) | resource |
+| [aws_alb_listener.front_end_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/alb_listener) | resource |
+| [aws_alb_target_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/alb_target_group) | resource |
 | [aws_ecs_service.log-forwarder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
 | [aws_ecs_service.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
 | [aws_ecs_task_definition.log-forwarder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) | resource |
@@ -114,6 +119,8 @@ No modules.
 | [aws_iam_policy.policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.attach_custom_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_route53_record.cert_validation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
+| [aws_route53_record.service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_s3_object.firelens-config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_s3_object.logforwarder-config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_s3_object.logforwarder-parser](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
@@ -121,6 +128,7 @@ No modules.
 | [aws_security_group.efs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.svc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.allow_alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.allow_api_between_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_cidr_blocks](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_multicast_between_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_security_groups](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
@@ -133,6 +141,7 @@ No modules.
 | [aws_iam_policy_document.efs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_route53_zone.primary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 | [template_file.firelens-config](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.log-forwarder-task-definition](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.logforwarder-config](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
@@ -152,6 +161,8 @@ No modules.
 | <a name="input_boomi_environment_id"></a> [boomi\_environment\_id](#input\_boomi\_environment\_id) | The Boomi environment ID to assocaite with the Atom/Molecule | `string` | n/a | yes |
 | <a name="input_boomi_install_token"></a> [boomi\_install\_token](#input\_boomi\_install\_token) | The Boomi Install Token. This is used to install the Atom/Molecule and is only valid for up to 24hrs. | `string` | n/a | yes |
 | <a name="input_bootstrap_deploy"></a> [bootstrap\_deploy](#input\_bootstrap\_deploy) | A boolean value to determine if this is the initial deployment of atom/molecule. Set to true at first deployment and false for subsequent runs. | `bool` | `false` | no |
+| <a name="input_cert_domain"></a> [cert\_domain](#input\_cert\_domain) | A list of strings contains the Subject Alternative Names (SANs) for the certificate | `string` | n/a | yes |
+| <a name="input_cert_sans"></a> [cert\_sans](#input\_cert\_sans) | A list of strings contains the Subject Alternative Names (SANs) for the certificate | `list(string)` | n/a | yes |
 | <a name="input_container_efs_mount_point"></a> [container\_efs\_mount\_point](#input\_container\_efs\_mount\_point) | The EFS mount point for the container | `string` | `"/mnt/boomi"` | no |
 | <a name="input_container_name"></a> [container\_name](#input\_container\_name) | The Container Name | `string` | `"atom_node"` | no |
 | <a name="input_deployment_maximum_percent"></a> [deployment\_maximum\_percent](#input\_deployment\_maximum\_percent) | The maximum healthy percent for the ecs deployment. Only valid for molecule deployments. Atom deployments will always have a maximum percent of 100. | `number` | `200` | no |
@@ -178,6 +189,8 @@ No modules.
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | A prefix string will be used to structure the ID/Name of resource | `string` | n/a | yes |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | A list of strings contains the IDs of the private subnets in the vpc | `list(string)` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project Name . This is used by the local.common\_tags to tag the resources | `string` | `"boomi"` | no |
+| <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | A list of strings contains the IDs of the public subnets in the vpc | `list(string)` | n/a | yes |
+| <a name="input_r53_zone_id"></a> [r53\_zone\_id](#input\_r53\_zone\_id) | The Route53 Zone ID to request the certificate and use for DNS validation | `string` | n/a | yes |
 | <a name="input_repository_url"></a> [repository\_url](#input\_repository\_url) | The URL of the ECR repository | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to be added to the resources | `map(string)` | `{}` | no |
 | <a name="input_task_definition_cpu"></a> [task\_definition\_cpu](#input\_task\_definition\_cpu) | CPU for the task definition | `number` | `256` | no |
@@ -188,8 +201,9 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_alb_security_group_id"></a> [alb\_security\_group\_id](#output\_alb\_security\_group\_id) | n/a |
 | <a name="output_aws_efs_access_point"></a> [aws\_efs\_access\_point](#output\_aws\_efs\_access\_point) | n/a |
 | <a name="output_file_system_id"></a> [file\_system\_id](#output\_file\_system\_id) | n/a |
-| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
 | <a name="output_service_name"></a> [service\_name](#output\_service\_name) | n/a |
+| <a name="output_task_security_group_id"></a> [task\_security\_group\_id](#output\_task\_security\_group\_id) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
