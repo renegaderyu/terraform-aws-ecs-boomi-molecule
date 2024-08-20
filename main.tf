@@ -153,7 +153,7 @@ resource "aws_security_group_rule" "allow_sgs_to_efs" {
   count             = length(var.allowed_cidr_blocks) == 0 ? 0 : 1
   description       = "Allow cidr blocks to EFS"
   security_group_id = aws_security_group.efs.id
-  cidr_blocks       = var.allowed_cidr_blocks
+  cidr_blocks       = [data.aws_vpc.main.cidr_block]
   type              = "ingress"
   protocol          = "TCP"
   from_port         = 2049

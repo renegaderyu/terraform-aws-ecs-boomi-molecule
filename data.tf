@@ -1,5 +1,9 @@
 # This configures the firelens sidecar container for the ECS task definition
 # We do not want to use this to collect runtime and app/process logs from the EFS volume
+data "aws_vpc" "main" {
+  id = var.vpc_id
+}
+
 data "template_file" "firelens-config" {
   template = file("${path.module}/firelens.conf.tpl")
 

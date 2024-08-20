@@ -36,7 +36,7 @@ docker build --build-arg="DEPLOY_TYPE=molecule" -t boomi-molecule:latest .
 ### For Boomi Atom Deployment
 ```hcl
 module "boomi_atom_service" {
-  source = "git::https://github.com/renegaderyu/terraform-aws-ecs-boomi-molecule.git?ref=main"
+  source                     = "git::https://github.com/renegaderyu/terraform-aws-ecs-boomi-molecule.git?ref=main"
   vpc_id                     = module.vpc.vpc_id
   private_subnet_ids         = module.vpc.private_subnets
   allowed_cidr_blocks        = [trusted_cidr_block1, trusted_cidr_block2]
@@ -58,7 +58,7 @@ module "boomi_atom_service" {
 ### For Boomi Molecule Deployment
 ```hcl
 module "boomi_molecule_service" {
-  source = "git::https://github.com/renegaderyu/terraform-aws-ecs-boomi-molecule.git?ref=main"
+  source                     = "git::https://github.com/renegaderyu/terraform-aws-ecs-boomi-molecule.git?ref=main"
   vpc_id                     = module.vpc.vpc_id
   private_subnet_ids         = module.vpc.private_subnets
   allowed_cidr_blocks        = [trusted_cidr_block1, trusted_cidr_block2]
@@ -142,6 +142,7 @@ No modules.
 | [aws_iam_policy_document.policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_route53_zone.primary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
+| [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 | [template_file.firelens-config](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.log-forwarder-task-definition](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.logforwarder-config](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
