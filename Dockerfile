@@ -24,6 +24,4 @@ EXPOSE 9090 45588 7800
 # Set user back to boomi
 USER boomi
 
-ENTRYPOINT ["entrypoint.sh"]
-
-CMD ["init"]
+ENTRYPOINT ["entrypoint.sh", "init"]
