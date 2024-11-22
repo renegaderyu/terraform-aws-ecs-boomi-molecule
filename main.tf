@@ -273,6 +273,16 @@ resource "aws_security_group_rule" "allow_cidr_blocks" {
   cidr_blocks       = var.allowed_cidr_blocks
 }
 
+resource "aws_security_group_rule" "allow_prefixes" {
+  count             = length(var.allowed_prefix_lists) == 0 ? 0 : 1
+  from_port         = 443
+  to_port           = 443
+  protocol          = "TCP"
+  type              = "ingress"
+  security_group_id = aws_security_group.alb.id
+  prefix_list_ids   = var.allowed_prefix_lists
+}
+
 resource "aws_alb_target_group" "this" {
   name        = "${var.prefix}-tg"
   port        = var.atom_port

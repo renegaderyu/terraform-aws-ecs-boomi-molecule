@@ -131,6 +131,7 @@ No modules.
 | [aws_security_group_rule.allow_api_between_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_cidr_blocks](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_multicast_between_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.allow_prefixes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_security_groups](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_sgs_to_efs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.allow_svc_to_efs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
@@ -155,6 +156,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_allowed_cidr_blocks"></a> [allowed\_cidr\_blocks](#input\_allowed\_cidr\_blocks) | A list of strings contains the CIDR blocks e.g. 10.10.10.0/26 which allowed to access the ALB | `list(string)` | n/a | yes |
+| <a name="input_allowed_prefix_lists"></a> [allowed\_prefix\_lists](#input\_allowed\_prefix\_lists) | A list of strings contains the prefix lists e.g. pl-123456 which allowed to access the ALB | `list(string)` | n/a | yes |
 | <a name="input_allowed_security_group_ids"></a> [allowed\_security\_group\_ids](#input\_allowed\_security\_group\_ids) | A list of security group IDs to have access to the container | `list(string)` | `[]` | no |
 | <a name="input_atom_port"></a> [atom\_port](#input\_atom\_port) | The port number for the Atom which is defaulted to 9090 | `number` | `9090` | no |
 | <a name="input_boomi_account_id"></a> [boomi\_account\_id](#input\_boomi\_account\_id) | The Boomi Account ID | `string` | n/a | yes |

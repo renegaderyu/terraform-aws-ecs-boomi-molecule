@@ -41,6 +41,11 @@ variable "allowed_cidr_blocks" {
   description = "A list of strings contains the CIDR blocks e.g. 10.10.10.0/26 which allowed to access the ALB"
 }
 
+variable "allowed_prefix_lists" {
+  type        = list(string)
+  description = "A list of strings contains the prefix lists e.g. pl-123456 which allowed to access the ALB"
+}
+
 variable "ecs_cluster_name" {
   type        = string
   description = "The name of the ECS cluster"
