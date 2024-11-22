@@ -7,7 +7,7 @@
 [INPUT]
     Name              tail
     Tag               ${prefix}-process-logs
-    Path              /var/log/**/execution/history/**/**/process.xml
+    Path              /var/log/**/execution/history/**/**/**/**/process_log.xml
     Path_Key          efs_filename
     DB                /var/log/flb_positions.db
     DB.locking        true
@@ -17,6 +17,7 @@
     Read_from_Head    true
     Ignore_Older      14d
     Skip_Empty_Lines  On
+    Ignore_Older      1d
     multiline.parser  multiline_boomi-process-logs
 
 [INPUT]
@@ -32,6 +33,7 @@
     Read_from_Head    true
     Skip_Empty_Lines  On
     Ignore_Older      14d
+    multiline.parser  multiline_boomi-runtime-logs
 
 [FILTER]
     Name modify
