@@ -15,7 +15,6 @@
     Refresh_Interval  10
     Rotate_Wait       30
     Read_from_Head    true
-    Ignore_Older      14d
     Skip_Empty_Lines  On
     Ignore_Older      1d
     multiline.parser  multiline_boomi-process-logs
