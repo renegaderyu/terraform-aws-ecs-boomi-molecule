@@ -163,9 +163,10 @@ resource "aws_security_group_rule" "allow_sgs_to_efs" {
 resource "aws_efs_file_system" "this" {
   creation_token = "${var.prefix}-molecule-fs"
 
-  encrypted        = false
-  throughput_mode  = "bursting"
-  performance_mode = "maxIO"
+  encrypted                       = var.efs_encrypted
+  throughput_mode                 = var.efs_throughput_mode
+  provisioned_throughput_in_mibps = var.efs_throughput_mode == "provisioned" ? var.efs_provisioned_throughput_in_mibps : null
+  performance_mode                = var.efs_performance_mode
 
   tags = merge(
     local.common_tags,

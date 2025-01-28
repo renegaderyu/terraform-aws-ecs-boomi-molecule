@@ -245,3 +245,27 @@ variable "cert_sans" {
   type        = list(string)
   description = "A list of strings contains the Subject Alternative Names (SANs) for the certificate"
 }
+
+variable "efs_encrypted" {
+  type        = bool
+  default     = true
+  description = "A boolean value to determine if the EFS should be encrypted"
+}
+
+variable "efs_performance_mode" {
+  type        = string
+  default     = "generalPurpose"
+  description = "The performance mode of the EFS"
+}
+
+variable "efs_throughput_mode" {
+  type        = string
+  default     = "elastic"
+  description = "The throughput mode of the EFS"
+}
+
+variable "efs_provisioned_throughput_in_mibps" {
+  type        = number
+  default     = 1
+  description = "The provisioned throughput of the EFS. Only valid if throughput mode is set to provisioned"
+}
