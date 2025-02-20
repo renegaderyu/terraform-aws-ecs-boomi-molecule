@@ -172,6 +172,7 @@ No modules.
 | <a name="input_deployment_minimum_healthy_percent"></a> [deployment\_minimum\_healthy\_percent](#input\_deployment\_minimum\_healthy\_percent) | The minimum healthy percent for the ecs deployment. Only valid for molecule deployments. Atom deployments will always have a minimum healthy percent of 0. | `number` | `100` | no |
 | <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count) | The number of instances of the task definition to place and keep running. | `number` | n/a | yes |
 | <a name="input_ecs_cluster_name"></a> [ecs\_cluster\_name](#input\_ecs\_cluster\_name) | The name of the ECS cluster | `string` | n/a | yes |
+| <a name="input_efs_creation_token"></a> [efs\_creation\_token](#input\_efs\_creation\_token) | The creation token of the EFS. If not set, this will default to $prefix-molecule-fs | `string` | `null` | no |
 | <a name="input_efs_encrypted"></a> [efs\_encrypted](#input\_efs\_encrypted) | A boolean value to determine if the EFS should be encrypted | `bool` | `true` | no |
 | <a name="input_efs_performance_mode"></a> [efs\_performance\_mode](#input\_efs\_performance\_mode) | The performance mode of the EFS | `string` | `"generalPurpose"` | no |
 | <a name="input_efs_provisioned_throughput_in_mibps"></a> [efs\_provisioned\_throughput\_in\_mibps](#input\_efs\_provisioned\_throughput\_in\_mibps) | The provisioned throughput of the EFS. Only valid if throughput mode is set to provisioned | `number` | `1` | no |

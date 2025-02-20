@@ -45,14 +45,23 @@
     Add boomi_log_type runtime
 
 [FILTER]
-    # These values are added by the ECS agent but will all be from the logforwarding service
-    Name ecs
-    Match *
-    ADD ecs_task_arn $TaskARN
-    ADD ecs_cluster_name $ClusterName
-    ADD ecs_service $TaskDefinitionFamily
-    ADD task_def_version $TaskDefinitionVersion
-    ADD task_id $TaskID
+    Name parser
+    Match ${prefix}-runtime-logs
+    Key_Name message
+    Parser parse-runtime-logs
+    Reserve_Data On
+    Preserve_Key On
+
+# Leave disabled for now as ECS metadata is not available in the container
+#[FILTER]
+#    # These values are added by the ECS agent but will all be from the logforwarding service
+#    Name ecs
+#    Match *
+#    ADD ecs_task_arn $TaskARN
+#    ADD ecs_cluster_name $ClusterName
+#    ADD ecs_service $TaskDefinitionFamily
+#    ADD task_def_version $TaskDefinitionVersion
+#    ADD task_id $TaskID
 
 [OUTPUT]
     Name             s3

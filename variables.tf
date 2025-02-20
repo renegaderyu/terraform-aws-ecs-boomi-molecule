@@ -269,3 +269,9 @@ variable "efs_provisioned_throughput_in_mibps" {
   default     = 1
   description = "The provisioned throughput of the EFS. Only valid if throughput mode is set to provisioned"
 }
+
+variable "efs_creation_token" {
+  type        = string
+  default     = null
+  description = "The creation token of the EFS. If not set, this will default to $prefix-molecule-fs"
+}
