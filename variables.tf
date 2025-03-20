@@ -155,6 +155,12 @@ variable "task_definition_memory" {
   default     = 512
 }
 
+variable "task_definition_stop_timeout" {
+  type        = number
+  description = "The stop timeout for the task definition."
+  default     = 30
+}
+
 variable "image_tag" {
   type        = string
   default     = "latest"

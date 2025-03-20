@@ -13,6 +13,7 @@
     "memoryReservation": ${ecs_task_memory_reservation},
     "user": "1000:1000",
     "pseudoTerminal": true,
+    "stopTimeout": ${ecs_task_stop_timeout},
     "interactive": true,
     "logConfiguration": {
       "logDriver": "awsfirelens",

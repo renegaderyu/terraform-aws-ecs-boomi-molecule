@@ -60,6 +60,7 @@ data "template_file" "task-definition-atom" {
     ecs_task_cpu                = var.task_definition_cpu
     ecs_task_memory_max         = var.task_definition_memory
     ecs_task_memory_reservation = floor(abs(var.task_definition_memory - var.firelens_ecs_task_memory))
+    ecs_task_stop_timeout       = var.task_definition_stop_timeout
     efs_mount_point             = var.container_efs_mount_point
     environment_id              = var.boomi_environment_id
     environment_class           = var.boomi_environment_class
@@ -91,6 +92,7 @@ data "template_file" "task-definition-molecule" {
     ecs_task_cpu                = var.task_definition_cpu
     ecs_task_memory_max         = var.task_definition_memory
     ecs_task_memory_reservation = floor(abs(var.task_definition_memory - var.firelens_ecs_task_memory))
+    ecs_task_stop_timeout       = var.task_definition_stop_timeout
     efs_mount_point             = var.container_efs_mount_point
     environment_id              = var.boomi_environment_id
     environment_class           = var.boomi_environment_class

@@ -203,6 +203,7 @@ No modules.
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to be added to the resources | `map(string)` | `{}` | no |
 | <a name="input_task_definition_cpu"></a> [task\_definition\_cpu](#input\_task\_definition\_cpu) | CPU for the task definition | `number` | `256` | no |
 | <a name="input_task_definition_memory"></a> [task\_definition\_memory](#input\_task\_definition\_memory) | Memory for the task definition | `number` | `512` | no |
+| <a name="input_task_definition_stop_timeout"></a> [task\_definition\_stop\_timeout](#input\_task\_definition\_stop\_timeout) | The stop timeout for the task definition. | `number` | `30` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC ID, example vpc-1122334455 | `string` | n/a | yes |
 
 ## Outputs

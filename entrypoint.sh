@@ -37,4 +37,10 @@ export ATOM_LOCALHOSTID="${NODE_IP}"
 
 log "ATOM_LOCALHOSTID = ${ATOM_LOCALHOSTID}"
 
+# Sleep between 2-61 seconds to allow the environment to stabilize
+# This also helps avoid a race condition on container.properties file in EFS when multiple containers start
+random_sleep=$((RANDOM % 60 + 2))
+log "Sleeping for ${random_sleep} seconds to allow the environment to stabilize" "warn"
+sleep "${random_sleep}"
+
 exec "$@"

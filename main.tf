@@ -162,6 +162,7 @@ resource "aws_security_group_rule" "allow_sgs_to_efs" {
 
 resource "aws_efs_file_system" "this" {
   creation_token = var.efs_creation_token == null ? "${var.prefix}-molecule-fs" : var.efs_creation_token
+  #creation_token = var.efs_creation_token ? var.efs_creation_token : "${var.prefix}-molecule-fs"
 
   encrypted                       = var.efs_encrypted
   throughput_mode                 = var.efs_throughput_mode
