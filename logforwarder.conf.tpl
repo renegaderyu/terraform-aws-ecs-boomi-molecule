@@ -16,7 +16,7 @@
     Rotate_Wait       30
     Read_from_Head    true
     Skip_Empty_Lines  On
-    Ignore_Older      1d
+    Ignore_Older      4h
     multiline.parser  multiline_boomi-process-logs
 
 [INPUT]
@@ -31,7 +31,7 @@
     Rotate_Wait       30
     Read_from_Head    true
     Skip_Empty_Lines  On
-    Ignore_Older      14d
+    Ignore_Older      2d
     multiline.parser  multiline_boomi-runtime-logs
 
 [FILTER]

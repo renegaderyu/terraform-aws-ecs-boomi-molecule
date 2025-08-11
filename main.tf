@@ -295,10 +295,10 @@ resource "aws_alb_target_group" "this" {
   health_check {
     path                = "/_admin/liveness"
     port                = var.atom_port
-    interval            = 15
-    timeout             = 10
-    healthy_threshold   = 5
-    unhealthy_threshold = 5
+    interval            = var.healthcheck_interval
+    timeout             = var.healthcheck_timeout
+    healthy_threshold   = 3
+    unhealthy_threshold = 10
     matcher             = "200"
   }
 
