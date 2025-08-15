@@ -1,21 +1,5 @@
-# This configures the firelens sidecar container for the ECS task definition
-# We do not want to use this to collect runtime and app/process logs from the EFS volume
 data "aws_vpc" "main" {
   id = var.vpc_id
-}
-
-data "template_file" "firelens-config" {
-  template = file("${path.module}/firelens.conf.tpl")
-
-  vars = {
-    aws_region         = data.aws_region.current.name
-    bucket_name        = var.logging_bucket_name
-    efs_mount_point    = var.container_efs_mount_point
-    total_file_size    = var.firelens_total_file_size
-    upload_timeout     = var.firelens_upload_timeout
-    retry_limit        = var.firelens_retry_limit
-    destination_folder = var.firelens_s3_destination_folder
-  }
 }
 
 data "template_file" "logforwarder-config" {
@@ -27,10 +11,10 @@ data "template_file" "logforwarder-config" {
     role_arn           = aws_iam_role.role.arn
     bucket_name        = var.logging_bucket_name
     efs_mount_point    = var.container_efs_mount_point
-    total_file_size    = var.firelens_total_file_size
-    upload_timeout     = var.firelens_upload_timeout
-    retry_limit        = var.firelens_retry_limit
-    destination_folder = var.firelens_s3_destination_folder
+    total_file_size    = var.logforwarder_total_file_size
+    upload_timeout     = var.logforwarder_upload_timeout
+    retry_limit        = var.logforwarder_retry_limit
+    destination_folder = var.logforwarder_s3_destination_folder
   }
 }
 
@@ -59,15 +43,11 @@ data "template_file" "task-definition-atom" {
     container_name              = var.container_name
     ecs_task_cpu                = var.task_definition_cpu
     ecs_task_memory_max         = var.task_definition_memory
-    ecs_task_memory_reservation = floor(abs(var.task_definition_memory - var.firelens_ecs_task_memory))
+    ecs_task_memory_reservation = var.task_definition_memory
     ecs_task_stop_timeout       = var.task_definition_stop_timeout
     efs_mount_point             = var.container_efs_mount_point
     environment_id              = var.boomi_environment_id
     environment_class           = var.boomi_environment_class
-    firelens_ecs_task_memory    = var.firelens_ecs_task_memory
-    firelens_ecs_task_cpu       = var.firelens_ecs_task_cpu
-    firelens_image_url          = "${var.firelens_container_image_url}:${var.firelens_container_version}"
-    firelens_s3_config          = "arn:aws:s3:::${var.logging_bucket_name}/fluent-bit-${var.prefix}.conf"
     healthcheck_interval        = var.healthcheck_interval
     healthcheck_retries         = var.healthcheck_retries
     healthcheck_start_period    = var.healthcheck_start_period
@@ -91,15 +71,11 @@ data "template_file" "task-definition-molecule" {
     container_name              = var.container_name
     ecs_task_cpu                = var.task_definition_cpu
     ecs_task_memory_max         = var.task_definition_memory
-    ecs_task_memory_reservation = floor(abs(var.task_definition_memory - var.firelens_ecs_task_memory))
+    ecs_task_memory_reservation = var.task_definition_memory
     ecs_task_stop_timeout       = var.task_definition_stop_timeout
     efs_mount_point             = var.container_efs_mount_point
     environment_id              = var.boomi_environment_id
     environment_class           = var.boomi_environment_class
-    firelens_ecs_task_memory    = var.firelens_ecs_task_memory
-    firelens_ecs_task_cpu       = var.firelens_ecs_task_cpu
-    firelens_image_url          = "${var.firelens_container_image_url}:${var.firelens_container_version}"
-    firelens_s3_config          = "arn:aws:s3:::${var.logging_bucket_name}/fluent-bit-${var.prefix}.conf"
     healthcheck_interval        = var.healthcheck_interval
     healthcheck_retries         = var.healthcheck_retries
     healthcheck_start_period    = var.healthcheck_start_period

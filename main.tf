@@ -30,12 +30,6 @@ locals {
   domain_validation_options_list = tolist(aws_acm_certificate.cert.domain_validation_options)
 }
 
-resource "aws_s3_object" "firelens-config" {
-  bucket  = var.logging_bucket_name
-  key     = "fluent-bit-${var.prefix}.conf"
-  content = data.template_file.firelens-config.rendered
-}
-
 resource "aws_ssm_parameter" "logforwarder" {
   name  = "/${var.prefix}/logforwarder-start-config"
   type  = "String"

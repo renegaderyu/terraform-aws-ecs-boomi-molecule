@@ -172,49 +172,25 @@ variable "repository_url" {
   description = "The URL of the ECR repository"
 }
 
-variable "firelens_container_version" {
-  type        = string
-  default     = "latest"
-  description = "Docker image tag for the firelens container"
-}
-
-variable "firelens_container_image_url" {
-  type        = string
-  default     = "amazon/aws-for-fluent-bit"
-  description = "Docker image URL for the firelens container"
-}
-
-variable "firelens_ecs_task_cpu" {
-  type        = number
-  default     = 0
-  description = "CPU for the firelens ECS task definition"
-}
-
-variable "firelens_ecs_task_memory" {
-  type        = number
-  default     = 50
-  description = "Memory for the firelens ECS task definition"
-}
-
-variable "firelens_s3_destination_folder" {
+variable "logforwarder_s3_destination_folder" {
   type        = string
   default     = "/application_logs"
   description = "The folder in the S3 bucket where the logs will be stored"
 }
 
-variable "firelens_total_file_size" {
+variable "logforwarder_total_file_size" {
   type        = string
-  default     = "8M"
+  default     = "4M"
   description = "The total size of files dropped into the S3 log bucket"
 }
 
-variable "firelens_upload_timeout" {
+variable "logforwarder_upload_timeout" {
   type        = string
   default     = "1m"
   description = "The timeout for the log upload to S3"
 }
 
-variable "firelens_retry_limit" {
+variable "logforwarder_retry_limit" {
   type        = string
   default     = "2"
   description = "The number of retries for the log upload to S3"
@@ -222,13 +198,13 @@ variable "firelens_retry_limit" {
 
 variable "logforwarder_ecs_task_cpu" {
   type        = number
-  default     = 0
+  default     = 2048
   description = "CPU for the logforwarder ECS task definition"
 }
 
 variable "logforwarder_ecs_task_memory" {
   type        = number
-  default     = 50
+  default     = 2048
   description = "Memory for the logforwarder ECS task definition"
 }
 

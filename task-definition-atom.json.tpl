@@ -16,8 +16,13 @@
     "stopTimeout": ${ecs_task_stop_timeout},
     "interactive": true,
     "logConfiguration": {
-      "logDriver": "awsfirelens",
-      "options": {}
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${container_name}-logs",
+        "awslogs-region": "${aws_region}",
+        "awslogs-stream-prefix": "${prefix}",
+        "awslogs-create-group": "true"
+      }
     },
     "healthCheck": {
       "command": ["CMD-SHELL", "curl -f http://localhost:9090/_admin/liveness || exit 1"],
@@ -97,51 +102,6 @@
     "dockerLabels":
       {
         "ContainerName":"${container_name}"
-      }
-  },
-  {
-    "name": "${prefix}_log_router",
-    "image": "${firelens_image_url}",
-    "firelensConfiguration": {
-      "type": "fluentbit",
-      "options": {
-        "config-file-type": "s3",
-        "config-file-value": "${firelens_s3_config}",
-        "enable-ecs-log-metadata": "true"
-      }
-    },
-    "cpu": ${firelens_ecs_task_cpu},
-    "systemControls": [],
-    "volumesFrom": [],
-    "portMappings": [],
-    "user": "0",
-    "environment": [
-      {
-        "name": "APP_NAME",
-        "value": "${prefix}"
-      }
-    ],
-    "mountPoints": [
-        {
-            "containerPath": "${efs_mount_point}",
-            "sourceVolume": "${volume_name}"
-        }
-    ],
-    "essential": true,
-    "privileged": false,
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "firelens-container",
-        "awslogs-region": "${aws_region}",
-        "awslogs-create-group": "true",
-        "awslogs-stream-prefix": "${prefix}-firelens"
-      }
-    },
-    "memoryReservation": ${firelens_ecs_task_memory},
-    "dockerLabels":
-      {
-        "name":"${prefix}_log_router"
       }
   }
 ]

@@ -121,7 +121,6 @@ No modules.
 | [aws_iam_role_policy_attachment.attach_custom_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_route53_record.cert_validation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
-| [aws_s3_object.firelens-config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_s3_object.logforwarder-config](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_s3_object.logforwarder-parser](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_security_group.alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
@@ -144,7 +143,6 @@ No modules.
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_route53_zone.primary](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 | [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
-| [template_file.firelens-config](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.log-forwarder-task-definition](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.logforwarder-config](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 | [template_file.logforwarder-startup-script](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
@@ -177,21 +175,17 @@ No modules.
 | <a name="input_efs_performance_mode"></a> [efs\_performance\_mode](#input\_efs\_performance\_mode) | The performance mode of the EFS | `string` | `"generalPurpose"` | no |
 | <a name="input_efs_provisioned_throughput_in_mibps"></a> [efs\_provisioned\_throughput\_in\_mibps](#input\_efs\_provisioned\_throughput\_in\_mibps) | The provisioned throughput of the EFS. Only valid if throughput mode is set to provisioned | `number` | `1` | no |
 | <a name="input_efs_throughput_mode"></a> [efs\_throughput\_mode](#input\_efs\_throughput\_mode) | The throughput mode of the EFS | `string` | `"elastic"` | no |
-| <a name="input_firelens_container_image_url"></a> [firelens\_container\_image\_url](#input\_firelens\_container\_image\_url) | Docker image URL for the firelens container | `string` | `"amazon/aws-for-fluent-bit"` | no |
-| <a name="input_firelens_container_version"></a> [firelens\_container\_version](#input\_firelens\_container\_version) | Docker image tag for the firelens container | `string` | `"latest"` | no |
-| <a name="input_firelens_ecs_task_cpu"></a> [firelens\_ecs\_task\_cpu](#input\_firelens\_ecs\_task\_cpu) | CPU for the firelens ECS task definition | `number` | `0` | no |
-| <a name="input_firelens_ecs_task_memory"></a> [firelens\_ecs\_task\_memory](#input\_firelens\_ecs\_task\_memory) | Memory for the firelens ECS task definition | `number` | `50` | no |
-| <a name="input_firelens_retry_limit"></a> [firelens\_retry\_limit](#input\_firelens\_retry\_limit) | The number of retries for the log upload to S3 | `string` | `"2"` | no |
-| <a name="input_firelens_s3_destination_folder"></a> [firelens\_s3\_destination\_folder](#input\_firelens\_s3\_destination\_folder) | The folder in the S3 bucket where the logs will be stored | `string` | `"/application_logs"` | no |
-| <a name="input_firelens_total_file_size"></a> [firelens\_total\_file\_size](#input\_firelens\_total\_file\_size) | The total size of files dropped into the S3 log bucket | `string` | `"8M"` | no |
-| <a name="input_firelens_upload_timeout"></a> [firelens\_upload\_timeout](#input\_firelens\_upload\_timeout) | The timeout for the log upload to S3 | `string` | `"1m"` | no |
 | <a name="input_healthcheck_interval"></a> [healthcheck\_interval](#input\_healthcheck\_interval) | The interval between health checks | `number` | `10` | no |
 | <a name="input_healthcheck_retries"></a> [healthcheck\_retries](#input\_healthcheck\_retries) | The number of retries for the health check | `number` | `6` | no |
 | <a name="input_healthcheck_start_period"></a> [healthcheck\_start\_period](#input\_healthcheck\_start\_period) | The start period for the health check | `number` | `60` | no |
 | <a name="input_healthcheck_timeout"></a> [healthcheck\_timeout](#input\_healthcheck\_timeout) | The timeout for the health check | `number` | `5` | no |
 | <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | The image tag used by the ECS Task definition to create Atom Container | `string` | `"latest"` | no |
-| <a name="input_logforwarder_ecs_task_cpu"></a> [logforwarder\_ecs\_task\_cpu](#input\_logforwarder\_ecs\_task\_cpu) | CPU for the logforwarder ECS task definition | `number` | `0` | no |
-| <a name="input_logforwarder_ecs_task_memory"></a> [logforwarder\_ecs\_task\_memory](#input\_logforwarder\_ecs\_task\_memory) | Memory for the logforwarder ECS task definition | `number` | `50` | no |
+| <a name="input_logforwarder_ecs_task_cpu"></a> [logforwarder\_ecs\_task\_cpu](#input\_logforwarder\_ecs\_task\_cpu) | CPU for the logforwarder ECS task definition | `number` | `2048` | no |
+| <a name="input_logforwarder_ecs_task_memory"></a> [logforwarder\_ecs\_task\_memory](#input\_logforwarder\_ecs\_task\_memory) | Memory for the logforwarder ECS task definition | `number` | `2048` | no |
+| <a name="input_logforwarder_retry_limit"></a> [logforwarder\_retry\_limit](#input\_logforwarder\_retry\_limit) | The number of retries for the log upload to S3 | `string` | `"2"` | no |
+| <a name="input_logforwarder_s3_destination_folder"></a> [logforwarder\_s3\_destination\_folder](#input\_logforwarder\_s3\_destination\_folder) | The folder in the S3 bucket where the logs will be stored | `string` | `"/application_logs"` | no |
+| <a name="input_logforwarder_total_file_size"></a> [logforwarder\_total\_file\_size](#input\_logforwarder\_total\_file\_size) | The total size of files dropped into the S3 log bucket | `string` | `"4M"` | no |
+| <a name="input_logforwarder_upload_timeout"></a> [logforwarder\_upload\_timeout](#input\_logforwarder\_upload\_timeout) | The timeout for the log upload to S3 | `string` | `"1m"` | no |
 | <a name="input_logging_bucket_name"></a> [logging\_bucket\_name](#input\_logging\_bucket\_name) | The name of the S3 bucket to store the logs | `string` | n/a | yes |
 | <a name="input_molecule_deployment"></a> [molecule\_deployment](#input\_molecule\_deployment) | A boolean value to determine if the deployment is for molecule or atom. | `bool` | `false` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | A prefix string will be used to structure the ID/Name of resource | `string` | n/a | yes |
