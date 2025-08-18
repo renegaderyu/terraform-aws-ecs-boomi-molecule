@@ -180,6 +180,8 @@ No modules.
 | <a name="input_healthcheck_start_period"></a> [healthcheck\_start\_period](#input\_healthcheck\_start\_period) | The start period for the health check | `number` | `60` | no |
 | <a name="input_healthcheck_timeout"></a> [healthcheck\_timeout](#input\_healthcheck\_timeout) | The timeout for the health check | `number` | `5` | no |
 | <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | The image tag used by the ECS Task definition to create Atom Container | `string` | `"latest"` | no |
+| <a name="input_logforwarder_buffer_chunk_size"></a> [logforwarder\_buffer\_chunk\_size](#input\_logforwarder\_buffer\_chunk\_size) | The size of the buffer chunk for the logforwarder | `string` | `"64K"` | no |
+| <a name="input_logforwarder_buffer_max_size"></a> [logforwarder\_buffer\_max\_size](#input\_logforwarder\_buffer\_max\_size) | The maximum size of the buffer for the logforwarder | `string` | `"8MB"` | no |
 | <a name="input_logforwarder_ecs_task_cpu"></a> [logforwarder\_ecs\_task\_cpu](#input\_logforwarder\_ecs\_task\_cpu) | CPU for the logforwarder ECS task definition | `number` | `2048` | no |
 | <a name="input_logforwarder_ecs_task_memory"></a> [logforwarder\_ecs\_task\_memory](#input\_logforwarder\_ecs\_task\_memory) | Memory for the logforwarder ECS task definition | `number` | `2048` | no |
 | <a name="input_logforwarder_retry_limit"></a> [logforwarder\_retry\_limit](#input\_logforwarder\_retry\_limit) | The number of retries for the log upload to S3 | `string` | `"2"` | no |

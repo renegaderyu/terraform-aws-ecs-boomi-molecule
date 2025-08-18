@@ -15,6 +15,11 @@ data "template_file" "logforwarder-config" {
     upload_timeout     = var.logforwarder_upload_timeout
     retry_limit        = var.logforwarder_retry_limit
     destination_folder = var.logforwarder_s3_destination_folder
+    buffer_chunk_size  = var.logforwarder_buffer_chunk_size
+    buffer_max_size    = var.logforwarder_buffer_max_size
+    # Allocate 3/8 to runtime and 1/4 to HTTP; leaving overhead for output and transformations
+    runtime_buffer_limit = floor((var.logforwarder_ecs_task_memory * 3) / 8)
+    http_buffer_limit    = floor(var.logforwarder_ecs_task_memory / 4)
   }
 }
 

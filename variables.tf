@@ -208,6 +208,18 @@ variable "logforwarder_ecs_task_memory" {
   description = "Memory for the logforwarder ECS task definition"
 }
 
+variable "logforwarder_buffer_chunk_size" {
+  type        = string
+  default     = "64K"
+  description = "The size of the buffer chunk for the logforwarder"
+}
+
+variable "logforwarder_buffer_max_size" {
+  type        = string
+  default     = "8MB"
+  description = "The maximum size of the buffer for the logforwarder"
+}
+
 variable "logging_bucket_name" {
   type        = string
   description = "The name of the S3 bucket to store the logs"

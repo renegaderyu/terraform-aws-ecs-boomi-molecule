@@ -10,14 +10,17 @@
     Path              /var/log/**/logs/*.shared_http_server*.log
     Path_Key          efs_filename
     DB                /var/log/flb_http_positions.db
+    DB.journal_mode   MEMORY
     DB.locking        true
     Skip_Long_Lines   On
     Refresh_Interval  20
     Rotate_Wait       10
     Read_from_Head    true
     Skip_Empty_Lines  On
-    Ignore_Older      1h
-    Mem_Buf_Limit     16M
+    Ignore_Older      1d
+    Buffer_Chunk_Size ${buffer_chunk_size}
+    Buffer_Max_Size   ${buffer_max_size}
+    Mem_Buf_Limit     ${http_buffer_limit}MB
     Parser            apache
 
 [INPUT]
@@ -27,6 +30,7 @@
     Exclude_Path      /var/log/**/logs/*.shared_http_server*.log
     Path_Key          efs_filename
     DB                /var/log/flb_positions.db
+    DB.journal_mode   MEMORY
     DB.locking        true
     Skip_Long_Lines   On
     Refresh_Interval  20
@@ -34,7 +38,9 @@
     Read_from_Head    true
     Skip_Empty_Lines  On
     Ignore_Older      1h
-    Mem_Buf_Limit     16M
+    Buffer_Chunk_Size ${buffer_chunk_size}
+    Buffer_Max_Size   ${buffer_max_size}
+    Mem_Buf_Limit     ${runtime_buffer_limit}MB
     multiline.parser  multiline_boomi-runtime-logs
 
 [FILTER]
