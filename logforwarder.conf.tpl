@@ -1,23 +1,28 @@
 [SERVICE]
-    Flush        5
-    Grace        15
-    Log_Level    info
+    Flush        15
+    Grace        30
+    Log_Level    ${log_level}
     parsers_file parsers_multiline.conf
+    storage.max_chunks_up 256
 
 [INPUT]
     Name              tail
     Tag               ${prefix}-http-logs
     Path              /var/log/**/logs/*.shared_http_server*.log
     Path_Key          efs_filename
+    Inotify_Watcher   false
     DB                /var/log/flb_http_positions.db
-    DB.journal_mode   MEMORY
-    DB.locking        true
+    DB.journal_mode   TRUNCATE
+    DB.locking        false
+    DB.sync           Normal
     Skip_Long_Lines   On
-    Refresh_Interval  20
-    Rotate_Wait       10
-    Read_from_Head    true
     Skip_Empty_Lines  On
+    Refresh_Interval  60
+    Rotate_Wait       60
+    Read_from_Head    true
     Ignore_Older      1d
+    storage.type      memory
+    storage.pause_on_chunks_overlimit false
     Buffer_Chunk_Size ${buffer_chunk_size}
     Buffer_Max_Size   ${buffer_max_size}
     Mem_Buf_Limit     ${http_buffer_limit}MB
@@ -29,15 +34,19 @@
     Path              /var/log/**/logs/*.log
     Exclude_Path      /var/log/**/logs/*.shared_http_server*.log
     Path_Key          efs_filename
+    Inotify_Watcher   false
     DB                /var/log/flb_positions.db
-    DB.journal_mode   MEMORY
-    DB.locking        true
+    DB.journal_mode   TRUNCATE
+    DB.locking        false
+    DB.sync           Normal
     Skip_Long_Lines   On
-    Refresh_Interval  20
-    Rotate_Wait       30
+    Refresh_Interval  60
+    Rotate_Wait       60
     Read_from_Head    true
     Skip_Empty_Lines  On
-    Ignore_Older      1h
+    Ignore_Older      1d
+    storage.type      memory
+    storage.pause_on_chunks_overlimit false
     Buffer_Chunk_Size ${buffer_chunk_size}
     Buffer_Max_Size   ${buffer_max_size}
     Mem_Buf_Limit     ${runtime_buffer_limit}MB

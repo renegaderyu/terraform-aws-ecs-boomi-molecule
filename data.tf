@@ -17,6 +17,7 @@ data "template_file" "logforwarder-config" {
     destination_folder = var.logforwarder_s3_destination_folder
     buffer_chunk_size  = var.logforwarder_buffer_chunk_size
     buffer_max_size    = var.logforwarder_buffer_max_size
+    log_level          = var.logforwarder_log_level
     # Allocate 3/8 to runtime and 1/4 to HTTP; leaving overhead for output and transformations
     runtime_buffer_limit = floor((var.logforwarder_ecs_task_memory * 3) / 8)
     http_buffer_limit    = floor(var.logforwarder_ecs_task_memory / 4)

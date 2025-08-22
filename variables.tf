@@ -180,13 +180,13 @@ variable "logforwarder_s3_destination_folder" {
 
 variable "logforwarder_total_file_size" {
   type        = string
-  default     = "4M"
+  default     = "8M"
   description = "The total size of files dropped into the S3 log bucket"
 }
 
 variable "logforwarder_upload_timeout" {
   type        = string
-  default     = "1m"
+  default     = "2m"
   description = "The timeout for the log upload to S3"
 }
 
@@ -198,26 +198,31 @@ variable "logforwarder_retry_limit" {
 
 variable "logforwarder_ecs_task_cpu" {
   type        = number
-  default     = 2048
+  default     = 1024
   description = "CPU for the logforwarder ECS task definition"
 }
 
 variable "logforwarder_ecs_task_memory" {
   type        = number
-  default     = 2048
+  default     = 512
   description = "Memory for the logforwarder ECS task definition"
 }
 
 variable "logforwarder_buffer_chunk_size" {
   type        = string
-  default     = "64K"
+  default     = "1M"
   description = "The size of the buffer chunk for the logforwarder"
 }
 
 variable "logforwarder_buffer_max_size" {
   type        = string
-  default     = "8MB"
+  default     = "24MB"
   description = "The maximum size of the buffer for the logforwarder"
+}
+variable "logforwarder_log_level" {
+  type        = string
+  default     = "info"
+  description = "The log level for the logforwarder"
 }
 
 variable "logging_bucket_name" {
