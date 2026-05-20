@@ -1,0 +1,10 @@
+product_slug: "terraform-aws-ecs-boomi-molecule"
+schedule: "monthly"
+scope:
+  - "/"
+exclude_paths:
+  - "**/node_modules/"
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/build/"
+max_files_per_segment: 200

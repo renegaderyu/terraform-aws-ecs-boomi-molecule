@@ -1,0 +1,36 @@
+version: '2.0'
+slug: terraform-aws-ecs-boomi-molecule
+ref: v1
+agents:
+  pr-review:
+    enabled: true
+    exclude_paths:
+    - docs/**
+    - '*.md'
+    severity_threshold: medium
+    blocking_threshold: critical
+    max_findings: 20
+  code-review:
+    enabled: false
+    exclude_paths:
+    - docs/**
+    - '*.md'
+    - '**/*.test.*'
+    max_findings: 20
+    focus: all
+  prompt:
+    enabled: false
+  vuln-hunter:
+    enabled: true
+    schedule: monthly
+    scope:
+    - /
+    exclude_paths:
+    - '**/node_modules/'
+    - '**/*.test.*'
+    - '**/*.spec.*'
+    - '**/build/'
+    max_files_per_segment: 200
+  drift-monitor:
+    enabled: true
+    schedule: daily

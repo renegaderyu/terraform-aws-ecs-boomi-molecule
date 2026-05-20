@@ -1,0 +1,22 @@
+# Managed by bn-securedev-cicd installer. Manual edits below this line are preserved.
+# bn-securedev: agent=bn-vuln-hunter version=v1
+name: BN Vuln Hunter
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+concurrency:
+  group: bn-vuln-hunter-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  vuln-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: barracuda-internal/bn-securedev-cicd/actions/bn-vuln-hunter@v1
+        with:
+          api-key: ${{ secrets.IQ_API_KEY }}

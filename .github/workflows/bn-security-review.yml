@@ -1,0 +1,23 @@
+# Managed by bn-securedev-cicd installer. Manual edits below this line are preserved.
+# bn-securedev: agent=bn-security-review version=v1
+name: BN Security Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+concurrency:
+  group: bn-security-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  security-review:
+    if: ${{ !contains(github.event.pull_request.title, '[skip-security]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: barracuda-internal/bn-securedev-cicd/actions/bn-security-review@v1
+        with:
+          api-key: ${{ secrets.IQ_API_KEY }}

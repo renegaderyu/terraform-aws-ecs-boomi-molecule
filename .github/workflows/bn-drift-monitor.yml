@@ -1,0 +1,28 @@
+# Managed by bn-securedev-cicd installer. Manual edits below this line are preserved.
+# bn-securedev: agent=bn-drift-monitor version=v1
+name: BN Drift Monitor
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+concurrency:
+  group: bn-drift-monitor-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'scheduled' }}
+  cancel-in-progress: true
+jobs:
+  drift-check:
+    if: ${{ !contains(github.event.pull_request.title, '[skip-drift]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: barracuda-internal/bn-securedev-cicd/actions/bn-drift-monitor@v1
+        with:
+          api-key: ${{ secrets.IQ_API_KEY }}

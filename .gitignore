@@ -142,3 +142,6 @@ providers/*
 providers
 modules/aws
 modules/aws/*
+
+# BN SecureDev Toolkit — agent output and state
+.bn-securedev/

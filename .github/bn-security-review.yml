@@ -1,0 +1,7 @@
+product_slug: "terraform-aws-ecs-boomi-molecule"
+severity_threshold: medium
+blocking_threshold: critical
+exclude_paths:
+  - "docs/**"
+  - "*.md"
+max_findings: 20
